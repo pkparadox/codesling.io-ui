@@ -7,8 +7,8 @@ import Button from '../globals/Button/';
 import './Auth.css';
 
 export default class Signup extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       email: '',
