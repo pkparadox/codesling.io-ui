@@ -6,12 +6,12 @@ import Logo from '../globals/Logo';
 import './LandingPage.css';
 
 class LandingPage extends Component {
-  state = { 
+  state = {
     loading: false
-   }
+  }
 
   //  handleClick = () => {
-     
+
   //  }
 
   render() {
@@ -35,7 +35,7 @@ class LandingPage extends Component {
           loading={this.state.loading}
           text='Signup'
           onClick={() => this.props.history.push('/signup')}
-        /> 
+        />
       </div>
     );
   }

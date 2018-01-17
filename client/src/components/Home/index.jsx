@@ -13,13 +13,13 @@ class Home extends Component {
   state = {
     allChallenges: [],
     selectedChallenge: {}
-   }
+  }
 
-   async componentDidMount() {
+  async componentDidMount() {
     const id = localStorage.getItem('id');
     const { data } = await axios.get(`http://localhost:3396/api/usersChallenges/${id}`)
     this.setState({ allChallenges: data.rows });
-   }
+  }
 
   randomSlingId = () => {
     slingId = `${randomstring.generate()}`;
@@ -34,7 +34,7 @@ class Home extends Component {
       }
     });
   }
-  
+
   handleAddChallengeClick = () => {
     this.props.history.push('/addChallenge');
   }
@@ -53,13 +53,14 @@ class Home extends Component {
         />
         <br />
         <select onChange={(e) => this.handleChallengeSelect(e)}>
-          {this.state.allChallenges.map(challenge => {
+          {this.state.allChallenges.map((challenge, i) => {
             return (
-            <option
-              value={JSON.stringify(challenge)}
-            >
-              {challenge.title}
-            </option>)
+              <option
+                key={i}
+                value={JSON.stringify(challenge)}
+              >
+                {challenge.title}
+              </option>)
           }
           )}
         </select>

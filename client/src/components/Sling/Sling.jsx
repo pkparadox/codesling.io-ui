@@ -56,6 +56,22 @@ class Sling extends Component {
     });
 
     window.addEventListener('resize', this.setEditorSize);
+    (function() {
+      var video = document.getElementById('video'),
+          vendorUrl = window.URL || window.webkitURL;
+
+      navigator.getMedia = navigator.getUserMedia ||
+                          navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+      navigator.getMedia({
+        video: true,
+        audio: true
+      }, function(stream) {
+        video.src = vendorUrl.createObjectURL(stream);
+        video.play();
+      }, function(error) {
+        console.log(error);
+      })
+    })();
   }
 
   submitCode = () => {
@@ -95,6 +111,7 @@ class Sling extends Component {
             }}
             onChange={this.handleChange}
             />
+            <video id="video" width="348" height="300"><p>Test</p></video>
         </div>
         <div className="stdout-container">
             {this.state.challenge.title || this.props.challenge.title}
@@ -120,6 +137,7 @@ class Sling extends Component {
               readOnly: true,
             }}
           />
+          <video id="video" width="348" height="300"><p>Test</p></video>
         </div>
       </div>
     )
