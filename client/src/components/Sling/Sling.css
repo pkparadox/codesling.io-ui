@@ -1,6 +1,8 @@
 .CodeMirror,
 .stdout {
-  font-family: "Operator Mono", Menlo, Monaco, "Lucida Console", monospace; }
+  font-family: "Operator Mono", Menlo, Monaco, "Lucida Console", monospace;
+}
+
 
 .sling-container {
   display: grid;
@@ -39,3 +41,6 @@
   background: #141414;
   padding: 5px;
   margin: 0 30px; }
+  .CodeMirror {
+    height: 350px!important;
+  }
