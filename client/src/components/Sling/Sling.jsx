@@ -18,6 +18,7 @@ class Sling extends Component {
     super();
     this.state = {
       id: null,
+      username: null,
       ownerText: null,
       challengerText: null,
       text: '',
@@ -37,9 +38,10 @@ class Sling extends Component {
       socket.emit('client.ready', startChall);
     });
 
-    socket.on('server.initialState', ({ id, text, challenge }) => {
+    socket.on('server.initialState', ({ id, username, text, challenge }) => {
       this.setState({
         id,
+        username,
         ownerText: text,
         challengerText: text,
         challenge
@@ -110,7 +112,7 @@ class Sling extends Component {
     this.setState({
       [e.target.name]: e.target.value
     })
-    socket.emit('client.message', (this.state.id + ' ' + this.state.message))
+    socket.emit('client.message', (this.state.username + ' ' + this.state.message))
     document.getElementById("trashInput").value = '';
   }
   handleMessageChange(e) {
