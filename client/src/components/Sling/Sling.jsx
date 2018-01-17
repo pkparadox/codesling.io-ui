@@ -22,8 +22,11 @@ class Sling extends Component {
       challengerText: null,
       text: '',
       challenge: '',
-      stdout: ''
+      stdout: '',
+      message: ''
     }
+    this.handleUserMessage = this.handleUserMessage.bind(this);
+    this.handleMessageChange = this.handleMessageChange.bind(this);
   }
 
   componentDidMount() {
@@ -32,7 +35,7 @@ class Sling extends Component {
     socket.on('connect', () => {
       socket.emit('client.ready', startChall);
     });
-    
+
     socket.on('server.initialState', ({ id, text, challenge }) => {
       this.setState({
         id,
@@ -56,19 +59,20 @@ class Sling extends Component {
     });
 
     window.addEventListener('resize', this.setEditorSize);
-    (function() {
-      var video = document.getElementById('video'),
-          vendorUrl = window.URL || window.webkitURL;
+    (function () {
+      var video1 = document.getElementById('video1'),
+        video2 = document.getElementById('video2'),
+        vendorUrl = window.URL || window.webkitURL;
 
       navigator.getMedia = navigator.getUserMedia ||
-                          navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+        navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
       navigator.getMedia({
         video: true,
-        audio: true
-      }, function(stream) {
-        video.src = vendorUrl.createObjectURL(stream);
-        video.play();
-      }, function(error) {
+        audio: false
+      }, function (stream) {
+        video1.src = vendorUrl.createObjectURL(stream);
+        video1.play();
+      }, function (error) {
         console.log(error);
       })
     })();
@@ -94,8 +98,22 @@ class Sling extends Component {
     this.editor = editor;
     this.setEditorSize();
   }
+  handleUserMessage(e) {
+    e.preventDefault();
+    this.setState({
+      [e.target.name]: e.target.value
+    })
+    console.log(this.state.message);
+    document.getElementById("trashInput").value = '';
+  }
+  handleMessageChange(e) {
+    this.setState({
+      [e.target.name]: e.target.value
+    })
+  }
 
   render() {
+    const trash = 'Talk trash:';
     const { socket } = this.props;
     return (
       <div className="sling-container">
@@ -110,14 +128,18 @@ class Sling extends Component {
               theme: 'base16-dark',
             }}
             onChange={this.handleChange}
-            />
-            <video id="video" width="348" height="300"><p>Test</p></video>
+          />
+          <form className="trash" onSubmit={this.handleUserMessage}>
+            {trash}<br />
+            <input id="trashInput" className="trashMessage" type="text" name="message" onChange={this.handleMessageChange}></input>
+          </form>
+          <video id="video1" width="348" height="300"></video>
         </div>
         <div className="stdout-container">
-            {this.state.challenge.title || this.props.challenge.title}
-            <br/>
-            {this.state.challenge.content || this.props.challenge.content}
-          <Stdout text={this.state.stdout}/>
+          {this.state.challenge.title || this.props.challenge.title}
+          <br />
+          {this.state.challenge.content || this.props.challenge.content}
+          <Stdout text={this.state.stdout} />
           <Button
             className="run-btn"
             text="Run Code"
@@ -127,7 +149,7 @@ class Sling extends Component {
           />
         </div>
         <div className="code2-editor-container">
-          <CodeMirror 
+          <CodeMirror
             editorDidMount={this.initializeEditor}
             value={this.state.challengerText}
             options={{
@@ -137,7 +159,6 @@ class Sling extends Component {
               readOnly: true,
             }}
           />
-          <video id="video" width="348" height="300"><p>Test</p></video>
         </div>
       </div>
     )
