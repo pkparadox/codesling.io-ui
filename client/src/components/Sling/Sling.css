@@ -44,3 +44,11 @@
   .CodeMirror {
     height: 350px!important;
   }
+  .trash {
+    color: black!important;
+  }
+  .trashMessage {
+    background-color: #dadada;
+    width: 40%;
+    border: 1px solid black;
+  }
