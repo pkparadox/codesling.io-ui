@@ -23,7 +23,8 @@ class Sling extends Component {
       text: '',
       challenge: '',
       stdout: '',
-      message: ''
+      message: '',
+      messages: []
     }
     this.handleUserMessage = this.handleUserMessage.bind(this);
     this.handleMessageChange = this.handleMessageChange.bind(this);
@@ -57,6 +58,11 @@ class Sling extends Component {
       const ownerEmail = localStorage.getItem('email');
       email === ownerEmail ? this.setState({ stdout }) : null;
     });
+    socket.on('server.message', (message) => {
+      this.setState({
+        messages: message
+      })
+    })
 
     window.addEventListener('resize', this.setEditorSize);
     (function () {
@@ -99,11 +105,12 @@ class Sling extends Component {
     this.setEditorSize();
   }
   handleUserMessage(e) {
+    const { socket } = this.props;
     e.preventDefault();
     this.setState({
       [e.target.name]: e.target.value
     })
-    console.log(this.state.message);
+    socket.emit('client.message', (this.state.id + ' ' + this.state.message))
     document.getElementById("trashInput").value = '';
   }
   handleMessageChange(e) {
@@ -113,6 +120,7 @@ class Sling extends Component {
   }
 
   render() {
+    let messageRendered = this.state.messages;
     const trash = 'Talk trash:';
     const { socket } = this.props;
     return (
@@ -147,6 +155,9 @@ class Sling extends Component {
             color="white"
             onClick={() => this.submitCode()}
           />
+          <div className="messages">
+            {messageRendered}
+          </div>
         </div>
         <div className="code2-editor-container">
           <CodeMirror
