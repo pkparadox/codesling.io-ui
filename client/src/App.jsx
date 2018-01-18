@@ -10,6 +10,7 @@ import Home from './components/Home/index.jsx';
 import Challenge from './components/Challenge/index.jsx';
 import AddChallenge from './components/Challenge/AddChallenge/index.jsx';
 import Protected from './components/globals/Protected';
+import './App.css'
 
 class App extends Component {
   constructor() {
