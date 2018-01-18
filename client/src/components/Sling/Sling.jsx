@@ -74,24 +74,24 @@ class Sling extends Component {
         })
     })
 
-    window.addEventListener('resize', this.setEditorSize);
-    (function () {
-      var video1 = document.getElementById('video1'),
-        video2 = document.getElementById('video2'),
-        vendorUrl = window.URL || window.webkitURL;
+    // window.addEventListener('resize', this.setEditorSize);
+    // (function () {
+    //   var video1 = document.getElementById('video1'),
+    //     video2 = document.getElementById('video2'),
+    //     vendorUrl = window.URL || window.webkitURL;
 
-      navigator.getMedia = navigator.getUserMedia ||
-        navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
-      navigator.getMedia({
-        video: true,
-        audio: false
-      }, function (stream) {
-        video1.src = vendorUrl.createObjectURL(stream);
-        video1.play();
-      }, function (error) {
-        console.log(error);
-      })
-    })();
+    //   navigator.getMedia = navigator.getUserMedia ||
+    //     navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+    //   navigator.getMedia({
+    //     video: true,
+    //     audio: false
+    //   }, function (stream) {
+    //     video1.src = vendorUrl.createObjectURL(stream);
+    //     video1.play();
+    //   }, function (error) {
+    //     console.log(error);
+    //   })
+    // })();
   }
 
   submitCode = () => {
@@ -121,6 +121,7 @@ class Sling extends Component {
       [e.target.name]: e.target.value
     })
     const payload = {
+      username: localStorage.username,
       message: this.state.message
     }
     axios.post('http://localhost:3396/api/messages/addMessage', payload)
