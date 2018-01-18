@@ -54,5 +54,9 @@
   }
   .messages {
     color: #fff!important;
-    height: 30%;
+    height: 60%!important;
+    overflow: scroll!important;
+  }
+  .liMessage {
+    list-style-type: none;
   }

@@ -61,9 +61,17 @@ class Sling extends Component {
       email === ownerEmail ? this.setState({ stdout }) : null;
     });
     socket.on('server.message', (message) => {
-      this.setState({
-        messages: message
-      })
+      axios.get('http://localhost:3396/api/messages/getMessages')
+        .then((res) => {
+          console.log('res in client get', res.data);
+          this.setState({
+            messages: res.data
+          })
+          console.log(this.state.messages);
+        })
+        .catch(() => {
+          console.log('error in client get messages');
+        })
     })
 
     window.addEventListener('resize', this.setEditorSize);
@@ -112,7 +120,18 @@ class Sling extends Component {
     this.setState({
       [e.target.name]: e.target.value
     })
-    socket.emit('client.message', (this.state.username + ' ' + this.state.message))
+    const payload = {
+      message: this.state.message
+    }
+    axios.post('http://localhost:3396/api/messages/addMessage', payload)
+      .then((res) => {
+        console.log(res.data);
+        socket.emit('client.message', (this.state.message))
+
+      })
+      .catch(() => {
+        console.log('error in addMessage');
+      })
     document.getElementById("trashInput").value = '';
   }
   handleMessageChange(e) {
@@ -122,7 +141,6 @@ class Sling extends Component {
   }
 
   render() {
-    let messageRendered = this.state.messages;
     const trash = 'Talk trash:';
     const { socket } = this.props;
     return (
@@ -158,7 +176,13 @@ class Sling extends Component {
             onClick={() => this.submitCode()}
           />
           <div className="messages">
-            {messageRendered}
+            <ul>
+            {this.state.messages.map((message, i) => (
+              <div key={i}>
+                <li className="liMessage">{message.id}: {message.message}</li>
+              </div>
+            ))}
+            </ul>
           </div>
         </div>
         <div className="code2-editor-container">
