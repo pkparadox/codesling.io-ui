@@ -93,7 +93,15 @@ class Sling extends Component {
     //   })
     // })();
   }
-
+  componentWillUnmount() {
+    axios.delete('http://localhost:3396/api/messages/deleteMessages')
+      .then((res) => {
+        console.log(res);
+      })
+      .catch(() => {
+        console.error('error deleting');
+      })
+  }
   submitCode = () => {
     const { socket } = this.props;
     const { ownerText } = this.state;
@@ -180,7 +188,7 @@ class Sling extends Component {
             <ul>
             {this.state.messages.map((message, i) => (
               <div key={i}>
-                <li className="liMessage">{message.id}: {message.message}</li>
+                <li className="liMessage">{message.username}: {message.message}</li>
               </div>
             ))}
             </ul>
