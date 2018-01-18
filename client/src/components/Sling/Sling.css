@@ -6,7 +6,7 @@
 
 .sling-container {
   display: grid;
-  height: 100%;
+  height: 90%;
   grid-template-areas: "header" "code1" "stdout" "code2"; }
   @media (min-width: 768px) {
     .sling-container {

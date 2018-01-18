@@ -66,15 +66,12 @@ class Sling extends Component {
     socket.on('server.message', (message) => {
       axios.get('http://localhost:3396/api/messages/getMessages')
         .then((res) => {
-          console.log('res in client get', res.data);
           let newData = res.data.filter(message => {
-            console.log(message.roomname, this.state.roomname);
             return message.roomname === this.state.roomname
           })
           this.setState({
             messages: newData
           })
-          console.log(this.state.messages);
         })
         .catch(() => {
           console.log('error in client get messages');
@@ -93,36 +90,20 @@ class Sling extends Component {
       // you can name it anything
       webrtc.joinRoom('your awesome room name');
     });
-    // (function () {
-    //   var video1 = document.getElementById('video1'),
-    //     vendorUrl = window.URL || window.webkitURL;
-
-    //   navigator.getMedia = navigator.getUserMedia ||
-    //     navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
-    //   navigator.getMedia({
-    //     video: true,
-    //     audio: false
-    //   }, function (stream) {
-    //     video1.src = vendorUrl.createObjectURL(stream);
-    //     video1.play();
-    //   }, function (error) {
-    //     console.log(error);
-    //   })
-    // })();
   }
-  goHome() {
-    axios({
+  goHome = async () => {
+    const result = await axios({
       method: 'DELETE', 
       url: 'http://localhost:3396/api/messages/deleteMessages', 
       data: { 
         roomname: this.state.roomname 
       }})
-      .then((res) => {
-        console.log(res);
-      })
-      .catch(() => {
-        console.error('error deleting');
-      })
+      // .then((res) => {
+      //   console.log(res);
+      // })
+      // .catch(() => {
+      //   console.error('error deleting');
+      // })
   }
   submitCode = () => {
     const { socket } = this.props;
@@ -144,7 +125,7 @@ class Sling extends Component {
     this.editor = editor;
     this.setEditorSize();
   }
-  handleUserMessage(e) {
+  handleUserMessage = async (e) => {
     const { socket } = this.props;
     e.preventDefault();
     this.setState({
@@ -158,20 +139,24 @@ class Sling extends Component {
       message: this.state.message,
       roomname: this.state.roomname
     }
-    axios.post('http://localhost:3396/api/messages/addMessage', payload)
-      .then((res) => {
-        console.log(res.data);
-        socket.emit('client.message', (this.state.message))
+    try {
+      const data = await axios.post('http://localhost:3396/api/messages/addMessage', payload)
+      data ? socket.emit('client.message', (this.state.message)) : console.log('error retrieving data');
+    } catch (err) {
+      throw new Error(err);
+    }
+      // .then((res) => {
+      //   console.log(res.data);
+      //   socket.emit('client.message', (this.state.message))
 
-      })
-      .catch(() => {
-        console.log('error in addMessage');
-      })
+      // })
+      // .catch(() => {
+      //   console.log('error in addMessage');
+      // })
     document.getElementById("trashInput").value = '';
     this.setState({
       message: null
     })
-    console.log('stately', this.state);
   }
   handleMessageChange(e) {
     this.setState({
@@ -201,7 +186,6 @@ class Sling extends Component {
             <input id="trashInput" className="trashMessage" type="text" name="message" onChange={this.handleMessageChange}></input>
           </form>
           <video width="100%" id="localVideo"></video>
-          {/* <video id="video1" width="100%"></video> */}
         </div>
         <div className="stdout-container">
           {this.state.challenge.title || this.props.challenge.title}
