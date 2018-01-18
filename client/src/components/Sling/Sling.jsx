@@ -81,22 +81,34 @@ class Sling extends Component {
         })
     })
     window.addEventListener('resize', this.setEditorSize);
-    (function () {
-      var video1 = document.getElementById('video1'),
-        vendorUrl = window.URL || window.webkitURL;
+    var webrtc = new SimpleWebRTC({
+      // the id/element dom element that will hold "our" video
+      localVideoEl: 'localVideo',
+      // the id/element dom element that will hold remote videos
+      remoteVideosEl: 'remotesVideos',
+      // immediately ask for camera access
+      autoRequestMedia: true
+    });
+    webrtc.on('readyToCall', function () {
+      // you can name it anything
+      webrtc.joinRoom('your awesome room name');
+    });
+    // (function () {
+    //   var video1 = document.getElementById('video1'),
+    //     vendorUrl = window.URL || window.webkitURL;
 
-      navigator.getMedia = navigator.getUserMedia ||
-        navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
-      navigator.getMedia({
-        video: true,
-        audio: false
-      }, function (stream) {
-        video1.src = vendorUrl.createObjectURL(stream);
-        video1.play();
-      }, function (error) {
-        console.log(error);
-      })
-    })();
+    //   navigator.getMedia = navigator.getUserMedia ||
+    //     navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+    //   navigator.getMedia({
+    //     video: true,
+    //     audio: false
+    //   }, function (stream) {
+    //     video1.src = vendorUrl.createObjectURL(stream);
+    //     video1.play();
+    //   }, function (error) {
+    //     console.log(error);
+    //   })
+    // })();
   }
   goHome() {
     axios({
@@ -188,7 +200,8 @@ class Sling extends Component {
             {trash}<br />
             <input id="trashInput" className="trashMessage" type="text" name="message" onChange={this.handleMessageChange}></input>
           </form>
-          <video id="video1" width="100%"></video>
+          <video width="100%" id="localVideo"></video>
+          {/* <video id="video1" width="100%"></video> */}
         </div>
         <div className="stdout-container">
           {this.state.challenge.title || this.props.challenge.title}
@@ -230,6 +243,7 @@ class Sling extends Component {
               readOnly: true,
             }}
           />
+          <div id="remotesVideos"></div>
         </div>
       </div>
     )
