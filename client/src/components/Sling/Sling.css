@@ -40,23 +40,24 @@
   min-height: 100px;
   background: #141414;
   padding: 5px;
-  margin: 0 30px; }
-  .CodeMirror {
-    height: 350px!important;
-  }
-  .trash {
-    color: black!important;
-  }
-  .trashMessage {
-    background-color: #dadada;
-    width: 40%;
-    border: 1px solid black;
-  }
-  .messages {
-    color: #fff!important;
-    height: 60%!important;
-    overflow: scroll!important;
-  }
-  .liMessage {
-    list-style-type: none;
-  }
+  margin: 0 30px; 
+}
+.CodeMirror {
+  height: 350px!important;
+}
+.trash {
+  color: black!important;
+}
+.trashMessage {
+  background-color: #dadada;
+  width: 40%;
+  border: 1px solid black;
+}
+.messages {
+  color: #fff!important;
+  height: 60%!important;
+  overflow: scroll!important;
+}
+.liMessage {
+  list-style-type: none;
+}

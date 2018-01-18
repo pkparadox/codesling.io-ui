@@ -3,6 +3,7 @@ import CodeMirror from 'react-codemirror2';
 import io from 'socket.io-client/dist/socket.io.js';
 import axios from 'axios';
 import { throttle } from 'lodash';
+import { Link } from 'react-router-dom';
 
 import Stdout from './StdOut/index.jsx';
 import EditorHeader from './EditorHeader';
@@ -24,11 +25,13 @@ class Sling extends Component {
       text: '',
       challenge: '',
       stdout: '',
-      message: '',
+      message: null,
+      roomname: window.location.href.split('/')[3],
       messages: []
     }
     this.handleUserMessage = this.handleUserMessage.bind(this);
     this.handleMessageChange = this.handleMessageChange.bind(this);
+    this.goHome = this.goHome.bind(this);
   }
 
   componentDidMount() {
@@ -64,8 +67,12 @@ class Sling extends Component {
       axios.get('http://localhost:3396/api/messages/getMessages')
         .then((res) => {
           console.log('res in client get', res.data);
+          let newData = res.data.filter(message => {
+            console.log(message.roomname, this.state.roomname);
+            return message.roomname === this.state.roomname
+          })
           this.setState({
-            messages: res.data
+            messages: newData
           })
           console.log(this.state.messages);
         })
@@ -73,28 +80,31 @@ class Sling extends Component {
           console.log('error in client get messages');
         })
     })
+    window.addEventListener('resize', this.setEditorSize);
+    (function () {
+      var video1 = document.getElementById('video1'),
+        vendorUrl = window.URL || window.webkitURL;
 
-    // window.addEventListener('resize', this.setEditorSize);
-    // (function () {
-    //   var video1 = document.getElementById('video1'),
-    //     video2 = document.getElementById('video2'),
-    //     vendorUrl = window.URL || window.webkitURL;
-
-    //   navigator.getMedia = navigator.getUserMedia ||
-    //     navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
-    //   navigator.getMedia({
-    //     video: true,
-    //     audio: false
-    //   }, function (stream) {
-    //     video1.src = vendorUrl.createObjectURL(stream);
-    //     video1.play();
-    //   }, function (error) {
-    //     console.log(error);
-    //   })
-    // })();
+      navigator.getMedia = navigator.getUserMedia ||
+        navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+      navigator.getMedia({
+        video: true,
+        audio: false
+      }, function (stream) {
+        video1.src = vendorUrl.createObjectURL(stream);
+        video1.play();
+      }, function (error) {
+        console.log(error);
+      })
+    })();
   }
-  componentWillUnmount() {
-    axios.delete('http://localhost:3396/api/messages/deleteMessages')
+  goHome() {
+    axios({
+      method: 'DELETE', 
+      url: 'http://localhost:3396/api/messages/deleteMessages', 
+      data: { 
+        roomname: this.state.roomname 
+      }})
       .then((res) => {
         console.log(res);
       })
@@ -128,9 +138,13 @@ class Sling extends Component {
     this.setState({
       [e.target.name]: e.target.value
     })
+    if (this.state.message === null) {
+      return;
+    }
     const payload = {
       username: localStorage.username,
-      message: this.state.message
+      message: this.state.message,
+      roomname: this.state.roomname
     }
     axios.post('http://localhost:3396/api/messages/addMessage', payload)
       .then((res) => {
@@ -142,6 +156,10 @@ class Sling extends Component {
         console.log('error in addMessage');
       })
     document.getElementById("trashInput").value = '';
+    this.setState({
+      message: null
+    })
+    console.log('stately', this.state);
   }
   handleMessageChange(e) {
     this.setState({
@@ -166,11 +184,11 @@ class Sling extends Component {
             }}
             onChange={this.handleChange}
           />
-          <form className="trash" onSubmit={this.handleUserMessage}>
+          <form className="trash" onSubmit={this.handleUserMessage} autoComplete="off">
             {trash}<br />
             <input id="trashInput" className="trashMessage" type="text" name="message" onChange={this.handleMessageChange}></input>
           </form>
-          <video id="video1" width="348" height="300"></video>
+          <video id="video1" width="100%"></video>
         </div>
         <div className="stdout-container">
           {this.state.challenge.title || this.props.challenge.title}
@@ -183,6 +201,13 @@ class Sling extends Component {
             backgroundColor="red"
             color="white"
             onClick={() => this.submitCode()}
+          />
+          <Button
+            className="run-btn"
+            text="Go Home"
+            backgroundColor="red"
+            color="white"
+            onClick={() => this.goHome()}
           />
           <div className="messages">
             <ul>
