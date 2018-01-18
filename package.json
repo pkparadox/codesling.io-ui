@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/codesling/codesling.io-ui#readme",
   "dependencies": {
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "node": "^9.4.0"
   }
 }
