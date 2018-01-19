@@ -12,7 +12,7 @@ class AddChallenge extends Component {
     title: '',
     content: '',
     difficulty: null
-   }
+  }
 
   submitChallenge = async (e) => {
     e.preventDefault();

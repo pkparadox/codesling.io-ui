@@ -27,9 +27,11 @@ export default class Login extends Component {
     }
     try {
       const data = await axios.post(`http://localhost:3396/api/auth/login`, body);
+      console.log('datadata', data.data)
       localStorage.setItem('email', data.data.email)
       localStorage.setItem('id', data.data.id)
       localStorage.setItem('token', data.data.token.accessToken)
+      localStorage.setItem('username', data.data.username)
       data ? this.props.history.push('/home') : this.props.history.push('/login');
     } catch (err) {
       throw new Error(err);

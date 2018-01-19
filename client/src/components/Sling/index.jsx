@@ -6,7 +6,7 @@ import Sling from './Sling.jsx';
 class SlingIndex extends Component {
   state = { 
     socket: null,
-   }
+  }
 
   componentWillMount() {
     this.socket = io('http://localhost:4155', {

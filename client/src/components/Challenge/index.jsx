@@ -7,7 +7,7 @@ import AddChallenge from './AddChallenge/index.jsx';
 class Challenge extends Component {
   state = {
     challenges: []
-   }
+  }
   
   componentDidMount() {
     this.fetchAllChallenges();
@@ -22,9 +22,9 @@ class Challenge extends Component {
   render() {
     return (
       <div>
-        {this.state.challenges.map(challenge => {
+        {this.state.challenges.map((challenge, i) => {
           return (
-            <div>
+            <div key={i}>
               <li>content: {challenge.content} </li>
               <li>difficulty: {challenge.difficulty} </li>
             </div>

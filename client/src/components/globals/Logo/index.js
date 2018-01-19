@@ -9,7 +9,7 @@ const Logo = ({
     <img 
       alt="Codesling.io Logo"
       className={`logo ${className ? className : ''}`}
-      src={codeslingLogo}
+      src='http://www.doggiesparadise.com/images/Doggies/doggie111.jpg'
     />
   );
 };
