@@ -19,7 +19,7 @@ class Home extends Component {
   async componentDidMount() {
     console.log('state in home', this.props);
     const id = localStorage.getItem('id');
-    const { data } = await axios.get(`http://localhost:3396/api/usersChallenges/${id}`)
+    const { data } = await axios.get(`http://52.53.213.77:3396/api/usersChallenges/${id}`)
     this.setState({ 
       allChallenges: data.rows,
     });

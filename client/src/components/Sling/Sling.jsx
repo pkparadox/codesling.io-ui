@@ -64,7 +64,7 @@ class Sling extends Component {
       email === ownerEmail ? this.setState({ stdout }) : null;
     });
     socket.on('server.message', (message) => {
-      axios.get('http://localhost:3396/api/messages/getMessages')
+      axios.get('http://52.53.213.77:3396/api/messages/getMessages')
         .then((res) => {
           let newData = res.data.filter(message => {
             return message.roomname === this.state.roomname
@@ -94,7 +94,7 @@ class Sling extends Component {
   goHome = async () => {
     const result = await axios({
       method: 'DELETE', 
-      url: 'http://localhost:3396/api/messages/deleteMessages', 
+      url: 'http://52.53.213.77:3396/api/messages/deleteMessages', 
       data: { 
         roomname: this.state.roomname 
       }})
@@ -140,7 +140,7 @@ class Sling extends Component {
       roomname: this.state.roomname
     }
     try {
-      const data = await axios.post('http://localhost:3396/api/messages/addMessage', payload)
+      const data = await axios.post('http://52.53.213.77:3396/api/messages/addMessage', payload)
       data ? socket.emit('client.message', (this.state.message)) : console.log('error retrieving data');
     } catch (err) {
       throw new Error(err);

@@ -26,7 +26,7 @@ export default class Login extends Component {
       username
     }
     try {
-      const data = await axios.post(`http://localhost:3396/api/auth/login`, body);
+      const data = await axios.post(`http://52.53.213.77:3396/api/auth/login`, body);
       console.log('datadata', data.data)
       localStorage.setItem('email', data.data.email)
       localStorage.setItem('id', data.data.id)
